@@ -37,3 +37,33 @@ def load_train(
 
     return train_img, train_labels
 
+
+def load_test(
+        test_img_dirname='data/test_128x128',
+    ):
+    test_img = []
+    img_filename_list = glob.glob(os.path.join(test_img_dirname, '*.jpg'))
+    img_filename_list = sorted(img_filename_list, key=lambda x: int(os.path.basename(x)[:-4]))
+    for img_filename in img_filename_list:
+        print('Reading', img_filename, end='\r')
+        img = skimage.io.imread(img_filename)
+        img = np.asarray(img, dtype=np.float)
+        test_img.append(img)
+
+    return test_img
+
+def write_result(
+        result,
+        result_filename,
+    ):
+
+    content = 'name,invasive'
+
+    for i in range(result.shape[0]):
+        content += "\n" + str(i+1) + "," + str(result[i])
+
+    with open(result_filename, "w") as f:
+        f.write(content)
+        f.close()
+
+

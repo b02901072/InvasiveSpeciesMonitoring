@@ -8,17 +8,12 @@ from keras.optimizers import SGD, Adam, Adagrad
 from keras.utils import np_utils, generic_utils
 import IO
 
-TRAIN_DATA_NUM = 2295
-TEST_DATA_NUM = 10000
 IMAGE_ROW = 128
 IMAGE_COLUMN = 128
 IMAGE_SIZE = IMAGE_ROW * IMAGE_COLUMN
 
 train_images, train_labels = IO.load_train()
-#test_images = np.load('data/test.image.raw.npy')
-
-#train_images = np.reshape(train_images, (TRAIN_DATA_NUM, 3, IMAGE_ROW, IMAGE_COLUMN))
-#test_images = np.reshape(test_images, (TEST_DATA_NUM, 1, IMAGE_ROW, IMAGE_COLUMN))
+test_images = IO.load_test()
 
 model = Sequential()
 
@@ -43,18 +38,9 @@ model.fit(train_images,
           batch_size=32, nb_epoch=10,    
           shuffle=True)
 
-'''
+model.save('model/CNN.model')
+
 result = model.predict(test_images,
                        batch_size=100, verbose=1)
 
-result_file = 'result.csv'
-content = "id,label"
-
-for i in range(TEST_DATA_NUM):
-    best_class = np.argmax(result[i])
-    content += "\n" + str(i) + "," + str(best_class)
-
-with open(result_file, "w") as f:
-    f.write(content)
-    f.close()
-'''
+IO.write_result(result, 'result/CNN.csv')
