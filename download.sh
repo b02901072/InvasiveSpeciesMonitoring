@@ -17,3 +17,13 @@ unzip train_labels.csv.zip
 7z x test.7z
 cd ..
 
+if ! [ -d model ]
+then
+    mkdir model
+fi
+
+if ! [ -d result ]
+then
+    mkdir result
+fi
+
