@@ -50,6 +50,9 @@ def load_test(
         img = np.asarray(img, dtype=np.float)
         test_img.append(img)
 
+    test_img = np.asarray(test_img, dtype=np.float) / 255.0
+    print('Testing Data: ', test_img.shape)
+    
     return test_img
 
 def write_result(
