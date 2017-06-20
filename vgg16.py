@@ -16,6 +16,13 @@ IMAGE_SIZE = IMAGE_ROW * IMAGE_COLUMN
 train_images, train_labels = IO.load_train()
 test_images = IO.load_test()
 
+validation_split = 0.2
+validation_index = int(train_images.shape[0] * (1-validation_split))
+valid_images = train_images[validation_index:]
+valid_labels = train_labels[validation_index:]
+train_images = train_images[:validation_index]
+train_labels = train_labels[:validation_index]
+
 base_model = applications.VGG16(weights='imagenet', include_top=False, input_shape=(IMAGE_ROW, IMAGE_COLUMN, 3))
 
 add_model = Sequential()
@@ -33,16 +40,33 @@ model.compile(loss="binary_crossentropy",
               optimizer=optimizer,
               metrics=["accuracy"])
 
-print('Fitting model...')
-model.fit(train_images,
-          train_labels,
-          batch_size=32, epochs=50,    
-          shuffle=True,
-          validation_split=0.2)
+from keras.preprocessing.image import ImageDataGenerator
+from keras.callbacks import ModelCheckpoint
 
-model.save('model/vgg16_CNN.model')
+batch_size = 32
+epochs = 20
+
+train_datagen = ImageDataGenerator(
+        rotation_range=30, 
+        width_shift_range=0.1,
+        height_shift_range=0.1, 
+        horizontal_flip=True)
+	
+train_datagen.fit(train_images)
+
+print('Fitting model...')
+model_name = 'model/vgg16_aug.model'
+history = model.fit_generator(
+    train_datagen.flow(train_images, train_labels, batch_size=batch_size),
+    steps_per_epoch=train_images.shape[0] // batch_size,
+    epochs=epochs,
+    validation_data=(valid_images, valid_labels),
+    callbacks=[ModelCheckpoint(model_name, monitor='val_acc', save_best_only=True)]
+)
+
+model = load_model(model_name)
 
 result = model.predict(test_images,
                        batch_size=100, verbose=1)
 
-IO.write_result(result, 'result/vgg16_CNN.csv')
+IO.write_result(result, 'result/vgg16_aug.csv')
