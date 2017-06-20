@@ -22,8 +22,6 @@ valid_labels = train_labels[validation_index:]
 train_images = train_images[:validation_index]
 train_labels = train_labels[:validation_index]
 
-
-
 model = Sequential()
 
 model.add(Convolution2D(32, (3, 3), activation='relu', input_shape=(IMAGE_ROW, IMAGE_COLUMN, 3)))
@@ -51,11 +49,11 @@ model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='sigmoid'))
 
-
+optimizer = SGD(lr=1e-4, momentum=0.9)
 
 print('Compiling model...')
 model.compile(loss="binary_crossentropy", 
-              optimizer="adam",
+              optimizer=optimizer,
               metrics=["accuracy"])
 
 
@@ -74,15 +72,16 @@ train_datagen = ImageDataGenerator(
 train_datagen.fit(train_images)
 
 print('Fitting model...')
+model_name = 'model/CNN_aug.model'
 history = model.fit_generator(
     train_datagen.flow(train_images, train_labels, batch_size=batch_size),
     steps_per_epoch=train_images.shape[0] // batch_size,
     epochs=epochs,
     validation_data=(valid_images, valid_labels),
-    callbacks=[ModelCheckpoint('VGG16-transferlearning.model', monitor='val_acc', save_best_only=True)]
+    callbacks=[ModelCheckpoint(model_name, monitor='val_acc', save_best_only=True)]
 )
 
-model.save('model/CNN_aug.model')
+model = load_model(model_name)
 
 result = model.predict(test_images,
                        batch_size=100, verbose=1)
