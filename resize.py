@@ -38,6 +38,6 @@ def resize_images(img_dirname, size):
     print('All images resized')
     
 if __name__ == '__main__':
-    resize_images('data/train', (128, 128))
-    resize_images('data/test', (128, 128))
+    resize_images('data/train', (150, 200))
+    resize_images('data/test', (150, 200))
 

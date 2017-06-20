@@ -27,3 +27,7 @@ then
     mkdir result
 fi
 
+if ! [ -f model/vgg16_weights.h5]
+then
+    ../gdown.pl 'https://drive.google.com/uc?export=download&id=0Bz7KyqmuGsilT0J5dmRCM0ROVHc' vgg16_weights.h5
+fi

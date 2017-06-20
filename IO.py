@@ -12,7 +12,7 @@ import pandas as pd
 import csv
 
 def load_train(
-        train_img_dirname='data/train_128x128',
+        train_img_dirname='data/train_150x200',
         train_label_filename='data/train_labels.csv'
     ):
     train_img = []
@@ -39,7 +39,7 @@ def load_train(
 
 
 def load_test(
-        test_img_dirname='data/test_128x128',
+        test_img_dirname='data/test_150x200',
     ):
     test_img = []
     img_filename_list = glob.glob(os.path.join(test_img_dirname, '*.jpg'))
@@ -63,7 +63,7 @@ def write_result(
     content = 'name,invasive'
 
     for i in range(result.shape[0]):
-        content += "\n" + str(i+1) + "," + str(result[i])
+        content += "\n" + str(i+1) + "," + str(result[i][0])
 
     with open(result_filename, "w") as f:
         f.write(content)
