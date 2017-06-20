@@ -63,14 +63,15 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.callbacks import ModelCheckpoint
 
 batch_size = 32
-epochs = 50
+epochs = 20
 
 train_datagen = ImageDataGenerator(
         rotation_range=30, 
         width_shift_range=0.1,
         height_shift_range=0.1, 
         horizontal_flip=True)
-	train_datagen.fit(train_images)
+	
+train_datagen.fit(train_images)
 
 print('Fitting model...')
 history = model.fit_generator(
