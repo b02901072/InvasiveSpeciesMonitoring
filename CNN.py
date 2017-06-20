@@ -49,7 +49,9 @@ model.add(Dense(256, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(1, activation='sigmoid'))
 
-optimizer = SGD(lr=1e-4, momentum=0.9)
+#optimizer = SGD(lr=1e-4, momentum=0.9)
+optimizer = "adam"
+optimizer = "rmsprop"
 
 print('Compiling model...')
 model.compile(loss="binary_crossentropy", 
